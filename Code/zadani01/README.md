@@ -34,3 +34,11 @@ HEAD:
     "Accept-Ranges: bytes\n"
     "Vary: Accept-Encoding\n"
     "Content-Type: image/png\n\n"
+
+
+---
+#### moje poznamky:
+- **convert** nemusí být na pc nainstalovaný.
+- Kontrola: `convert --version`
+- Instalace: `sudo apt-get install imagemagick`
+
