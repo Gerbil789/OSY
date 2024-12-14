@@ -22,8 +22,8 @@ Server pro každého nového klienta provede následující kroky:
 	- provede přesměrování STDOUT do sokuetu a provede příkaz:
 		- "convert battery-080.png -", nebo
 		- "convert -resample 300x300 battery-080.png -",
-- počká na dokončení příkazu
-- končí
+  - počká na dokončení příkazu
+  - končí
 
 Ošetřete pomocí semaforu, aby se nikdy neprováděly dva příkazy současně
 
