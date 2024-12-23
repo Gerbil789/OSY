@@ -3,3 +3,6 @@
 
 # Ignore object files
 *.o
+
+# Ignore test files
+Code/test/
