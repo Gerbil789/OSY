@@ -37,3 +37,11 @@ Po odeslání dat příjme data ze serveru a uloží do souboru.
 - čekání na `"OK\n"`
 - odeslání celého souboru na server
 - čtení dat ze serveru a ukladání do souboru
+
+---
+
+build: `$ make`
+
+run server: `$ ./socket_srv -d 3333`
+
+run client: `$ ./socket_cl -d localhost 3333 input.txt output.txt`

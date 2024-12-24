@@ -77,22 +77,19 @@ void help(int t_narg, char **t_args)
 
 void send_filesize(int t_sock, long t_size)
 {
-	log_msg(LOG_DEBUG, "Sending file size to server.");
+    log_msg(LOG_DEBUG, "Sending file size to server.");
 
-	char l_buf[128];
-	snprintf(l_buf, sizeof(l_buf), "%ld\n", t_size);
-	int l_len = write(t_sock, l_buf, strlen(l_buf));
-	if (l_len < 0)
-	{
-		log_msg(LOG_ERROR, "Unable to send data to server.");
-		exit(1);
-	}
-	else
-	{
-		log_msg(LOG_DEBUG, "Sent %d bytes to server.", l_len);
-	}
+    // Directly write the formatted string to the socket
+    int l_len = dprintf(t_sock, "%ld\n", t_size);
+    if (l_len < 0)
+    {
+        log_msg(LOG_ERROR, "Unable to send data to server.");
+        exit(1);
+    }
 
+    log_msg(LOG_DEBUG, "Sent %d bytes to server.", l_len);
 }
+
 
 void wait_for_OK(int t_sock)
 {
