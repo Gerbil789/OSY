@@ -1,13 +1,24 @@
 # Operační systémy - VSB
 https://poli.cs.vsb.cz/edu/osy
 
-✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani05`, `zadani06`, `zadani10`, `zadani11`
+✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani05`, `zadani06`, `zadani09`, `zadani10`, `zadani11`
 
-❌ **Todo:** `zadani04`, `zadani07`, `zadani08`, `zadani09`
+❌ **Todo:** `zadani04`, `zadani07`, `zadani08`
 
 ---
+## Obsah
 
-### `fork()` in C/C++
+- [fork() in C/C++](#fork-in-cc)
+- [Pipes in C/C++](#pipes-in-cc)
+- [Polling in C/C++](#polling-in-cc)
+- [Sockets in C/C++](#sockets-in-cc)
+- [Signals in C/C++](#signals-in-cc)
+- ...
+---
+
+
+
+### <a name="fork-in-cc"></a> `fork()` in C/C++
 
 `fork()` is a system call in Unix-like operating systems that creates a new process by duplicating the calling process. The new process is called the child process, and the original is the parent process.
 
@@ -43,7 +54,7 @@ int main() {
 }
 ```
 ---
-### Pipes in C/C++
+### <a name="pipes-in-cc"></a> Pipes in C/C++
 
 A **pipe** is a unidirectional communication mechanism between processes. It allows one process to write data, while another reads it, typically used between parent and child processes.
 
