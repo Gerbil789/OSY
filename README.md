@@ -1,9 +1,9 @@
 # Operační systémy - VSB
 https://poli.cs.vsb.cz/edu/osy
 
-✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani05`
+✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani05`, `zadani06`, `zadani10`, `zadani11`
 
-❌ **Todo:** `zadani04`, `zadani06`, `zadani07`, `zadani08`, `zadani09`, `zadani10`, `zadani11`
+❌ **Todo:** `zadani04`, `zadani07`, `zadani08`, `zadani09`
 
 ---
 
