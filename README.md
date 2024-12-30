@@ -1,5 +1,6 @@
 # Operační systémy - VSB
-https://poli.cs.vsb.cz/edu/osy
+<a href="https://poli.cs.vsb.cz/edu/osy" target="_blank">https://poli.cs.vsb.cz/edu/osy</a>
+
 
 ✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani05`, `zadani06`, `zadani08`, `zadani09`, `zadani10`, `zadani11`
 
@@ -19,5 +20,5 @@ https://poli.cs.vsb.cz/edu/osy
 ---
 ### todo: 
 ```
-makefile, shared memory, named semaphores, http, stat, grep, msg_queue
+makefile, shared memory, http, stat, grep, msg_queue, dup2
 ```

@@ -9,14 +9,80 @@ A **semaphore** is a synchronization primitive used to control access to a share
 #### POSIX Semaphores
 
 POSIX provides two types of semaphores:
-1. **Named Semaphores**:
+1. [**Named Semaphores**:](#named-semaphores)
    - Persistent across processes.
    - Identified by a name.
-2. **Unnamed Semaphores**:
+2. [**Unnamed Semaphores**:](#unnamed-semaphores)
    - Only valid within the process or among threads sharing memory.
 
-#### Key Functions for Semaphores
 
+### Named Semaphores
+
+Named semaphores allow synchronization between processes and are identified by a unique name in the filesystem. They persist until explicitly removed or the system reboots.
+
+#### Key Functions for Named Semaphores
+
+- **Open or Create a Named Semaphore**:
+```c
+#include <semaphore.h>
+#include <fcntl.h> // For O_CREAT and O_EXCL
+
+sem_t *sem_open(const char *name, int oflag, mode_t mode, unsigned int value);
+```
+
+  - `name`: Unique name of the semaphore (e.g., `"/my_semaphore"`).
+  - `oflag`: Flags like `O_CREAT` (create if not exists) or `O_EXCL` (error if exists).
+  - `mode`: File permission bits (e.g., 0644).
+  - `value`: Initial value of the semaphore.
+
+- **Close named semaphore**:
+```c
+int sem_close(sem_t *sem);
+```
+
+- **Unlink a Named Semaphore**:
+```c
+int sem_unlink(const char *name);
+```
+  - Removes the semaphore from the filesystem.
+
+- **Example**:
+```c
+#include <stdio.h>
+#include <semaphore.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main() {
+    sem_t *sem = sem_open("/my_semaphore", O_CREAT, 0644, 1);
+    if (sem == SEM_FAILED) {
+        perror("sem_open failed");
+        return 1;
+    }
+
+    printf("Waiting for semaphore...\n");
+    sem_wait(sem); // Decrement semaphore, blocks if value is 0
+    printf("Semaphore acquired. Critical section begins.\n");
+
+    sleep(2); // Simulate critical section
+    printf("Critical section ends. Releasing semaphore.\n");
+
+    sem_post(sem); // Increment semaphore
+    sem_close(sem); // Close semaphore
+    sem_unlink("/my_semaphore"); // Remove semaphore from filesystem
+
+    return 0;
+}
+```
+
+- **Key Points**:
+- Named semaphores are suitable for inter-process synchronization.
+- Always `sem_close()` after use and `sem_unlink()` when the semaphore is no longer needed.
+- Ensure the name is unique and starts with / (e.g., `"/my_semaphore"`).
+
+---
+
+### Unnamed Semaphores
 - **Initialization**:
 ```c
 #include <semaphore.h>
@@ -41,7 +107,23 @@ int sem_post(sem_t *sem);
 ```
 - **Try Wait**:
 ```c
-int sem_trywait(sem_t *sem);
+#include <semaphore.h>
+#include <stdio.h>
+#include <errno.h>
+
+sem_t sem;
+
+void thread_func() {
+    if (sem_trywait(&sem) == 0) {
+        printf("Semaphore acquired by thread.\n");
+    } else {
+        if (errno == EAGAIN) {
+            printf("Semaphore not available (non-blocking attempt).\n");
+        } else {
+            perror("sem_trywait failed");
+        }
+    }
+}
 ```
 
 - **Example: Thread Synchronization Using Semaphores**:
