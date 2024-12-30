@@ -19,5 +19,5 @@ https://poli.cs.vsb.cz/edu/osy
 ---
 ### todo: 
 ```
-string operation, makefile, shared memory, named semaphores, http, stat, grep, msg_queue
+makefile, shared memory, named semaphores, http, stat, grep, msg_queue
 ```
