@@ -1,17 +1,3 @@
-//***************************************************************************
-//
-// Program example for subject Operating Systems
-//
-// Petr Olivka, Dept. of Computer Science, petr.olivka@vsb.cz, 2021
-//
-// Example of socket server/client.
-//
-// This program is example of socket client.
-// The mandatory arguments of program is IP adress or name of server and
-// a port number.
-//
-//***************************************************************************
-
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,219 +14,216 @@
 #include <unistd.h>
 #include <errno.h>
 #include <netdb.h>
+#include <time.h>
 
-#define STR_CLOSE               "close"
+#define STR_CLOSE "close"
 
-//***************************************************************************
-// log messages
+#define LOG_ERROR 0 // errors
+#define LOG_INFO 1	// information and notifications
+#define LOG_DEBUG 2 // debug messages
 
-#define LOG_ERROR               0       // errors
-#define LOG_INFO                1       // information and notifications
-#define LOG_DEBUG               2       // debug messages
-
-// debug flag
 int g_debug = LOG_INFO;
 
-void log_msg( int t_log_level, const char *t_form, ... )
+void log_msg(int t_log_level, const char *t_form, ...)
 {
-    const char *out_fmt[] = {
-            "ERR: (%d-%s) %s\n",
-            "INF: %s\n",
-            "DEB: %s\n" };
+	const char *out_fmt[] = {
+			"ERR: (%d-%s) %s\n",
+			"INF: %s\n",
+			"DEB: %s\n"};
 
-    if ( t_log_level && t_log_level > g_debug ) return;
+	if (t_log_level && t_log_level > g_debug)
+		return;
 
-    char l_buf[ 1024 ];
-    va_list l_arg;
-    va_start( l_arg, t_form );
-    vsprintf( l_buf, t_form, l_arg );
-    va_end( l_arg );
+	char l_buf[1024];
+	va_list l_arg;
+	va_start(l_arg, t_form);
+	vsprintf(l_buf, t_form, l_arg);
+	va_end(l_arg);
 
-    switch ( t_log_level )
-    {
-    case LOG_INFO:
-    case LOG_DEBUG:
-        fprintf( stdout, out_fmt[ t_log_level ], l_buf );
-        break;
+	switch (t_log_level)
+	{
+	case LOG_INFO:
+	case LOG_DEBUG:
+		fprintf(stdout, out_fmt[t_log_level], l_buf);
+		break;
 
-    case LOG_ERROR:
-        fprintf( stderr, out_fmt[ t_log_level ], errno, strerror( errno ), l_buf );
-        break;
-    }
+	case LOG_ERROR:
+		fprintf(stderr, out_fmt[t_log_level], errno, strerror(errno), l_buf);
+		break;
+	}
 }
 
-//***************************************************************************
-// help
-
-void help( int t_narg, char **t_args )
+void help(int t_narg, char **t_args)
 {
-    if ( t_narg <= 1 || !strcmp( t_args[ 1 ], "-h" ) )
-    {
-        printf(
-            "\n"
-            "  Socket client example.\n"
-            "\n"
-            "  Use: %s [-h -d] ip_or_name port_number\n"
-            "\n"
-            "    -d  debug mode \n"
-            "    -h  this help\n"
-            "\n", t_args[ 0 ] );
+	if (t_narg <= 1 || !strcmp(t_args[1], "-h"))
+	{
+		printf(
+				"\n"
+				"  Socket client example.\n"
+				"\n"
+				"  Use: %s [-h -d] ip_or_name port_number\n"
+				"\n"
+				"    -d  debug mode \n"
+				"    -h  this help\n"
+				"\n",
+				t_args[0]);
 
-        exit( 0 );
-    }
+		exit(0);
+	}
 
-    if ( !strcmp( t_args[ 1 ], "-d" ) )
-        g_debug = LOG_DEBUG;
+	if (!strcmp(t_args[1], "-d"))
+		g_debug = LOG_DEBUG;
 }
 
-//***************************************************************************
-
-int main( int t_narg, char **t_args )
+int main(int t_narg, char **t_args)
 {
 
-    if ( t_narg <= 2 ) help( t_narg, t_args );
+	if (t_narg <= 2)
+		help(t_narg, t_args);
 
-    int l_port = 0;
-    char *l_host = nullptr;
+	int l_port = 0;
+	char *l_host = nullptr;
 
-    // parsing arguments
-    for ( int i = 1; i < t_narg; i++ )
-    {
-        if ( !strcmp( t_args[ i ], "-d" ) )
-            g_debug = LOG_DEBUG;
+	// parsing arguments
+	for (int i = 1; i < t_narg; i++)
+	{
+		if (!strcmp(t_args[i], "-d"))
+			g_debug = LOG_DEBUG;
 
-        if ( !strcmp( t_args[ i ], "-h" ) )
-            help( t_narg, t_args );
+		if (!strcmp(t_args[i], "-h"))
+			help(t_narg, t_args);
 
-        if ( *t_args[ i ] != '-' )
-        {
-            if ( !l_host )
-                l_host = t_args[ i ];
-            else if ( !l_port )
-                l_port = atoi( t_args[ i ] );
-        }
-    }
+		if (*t_args[i] != '-')
+		{
+			if (!l_host)
+				l_host = t_args[i];
+			else if (!l_port)
+				l_port = atoi(t_args[i]);
+		}
+	}
 
-    if ( !l_host || !l_port )
-    {
-        log_msg( LOG_INFO, "Host or port is missing!" );
-        help( t_narg, t_args );
-        exit( 1 );
-    }
+	if (!l_host || !l_port)
+	{
+		log_msg(LOG_INFO, "Host or port is missing!");
+		help(t_narg, t_args);
+		exit(1);
+	}
 
-    log_msg( LOG_INFO, "Connection to '%s':%d.", l_host, l_port );
+	log_msg(LOG_INFO, "Connection to '%s':%d.", l_host, l_port);
 
-    addrinfo l_ai_req, *l_ai_ans;
-    bzero( &l_ai_req, sizeof( l_ai_req ) );
-    l_ai_req.ai_family = AF_INET;
-    l_ai_req.ai_socktype = SOCK_STREAM;
+	addrinfo l_ai_req, *l_ai_ans;
+	bzero(&l_ai_req, sizeof(l_ai_req));
+	l_ai_req.ai_family = AF_INET;
+	l_ai_req.ai_socktype = SOCK_STREAM;
 
-    int l_get_ai = getaddrinfo( l_host, nullptr, &l_ai_req, &l_ai_ans );
-    if ( l_get_ai )
-    {
-        log_msg( LOG_ERROR, "Unknown host name!" );
-        exit( 1 );
-    }
+	int l_get_ai = getaddrinfo(l_host, nullptr, &l_ai_req, &l_ai_ans);
+	if (l_get_ai)
+	{
+		log_msg(LOG_ERROR, "Unknown host name!");
+		exit(1);
+	}
 
-    sockaddr_in l_cl_addr =  *( sockaddr_in * ) l_ai_ans->ai_addr;
-    l_cl_addr.sin_port = htons( l_port );
-    freeaddrinfo( l_ai_ans );
+	sockaddr_in l_cl_addr = *(sockaddr_in *)l_ai_ans->ai_addr;
+	l_cl_addr.sin_port = htons(l_port);
+	freeaddrinfo(l_ai_ans);
 
-    // socket creation
-    int l_sock_server = socket( AF_INET, SOCK_STREAM, 0 );
-    if ( l_sock_server == -1 )
-    {
-        log_msg( LOG_ERROR, "Unable to create socket.");
-        exit( 1 );
-    }
+	// socket creation
+	int l_sock_server = socket(AF_INET, SOCK_STREAM, 0);
+	if (l_sock_server == -1)
+	{
+		log_msg(LOG_ERROR, "Unable to create socket.");
+		exit(1);
+	}
 
-    // connect to server
-    if ( connect( l_sock_server, ( sockaddr * ) &l_cl_addr, sizeof( l_cl_addr ) ) < 0 )
-    {
-        log_msg( LOG_ERROR, "Unable to connect server." );
-        exit( 1 );
-    }
+	// connect to server
+	if (connect(l_sock_server, (sockaddr *)&l_cl_addr, sizeof(l_cl_addr)) < 0)
+	{
+		log_msg(LOG_ERROR, "Unable to connect server.");
+		exit(1);
+	}
 
-    uint l_lsa = sizeof( l_cl_addr );
-    // my IP
-    getsockname( l_sock_server, ( sockaddr * ) &l_cl_addr, &l_lsa );
-    log_msg( LOG_INFO, "My IP: '%s'  port: %d",
-             inet_ntoa( l_cl_addr.sin_addr ), ntohs( l_cl_addr.sin_port ) );
-    // server IP
-    getpeername( l_sock_server, ( sockaddr * ) &l_cl_addr, &l_lsa );
-    log_msg( LOG_INFO, "Server IP: '%s'  port: %d",
-             inet_ntoa( l_cl_addr.sin_addr ), ntohs( l_cl_addr.sin_port ) );
+	uint l_lsa = sizeof(l_cl_addr);
 
-    log_msg( LOG_INFO, "Enter 'close' to close application." );
+	// my IP
+	getsockname(l_sock_server, (sockaddr *)&l_cl_addr, &l_lsa);
+	log_msg(LOG_INFO, "My IP: '%s'  port: %d", inet_ntoa(l_cl_addr.sin_addr), ntohs(l_cl_addr.sin_port));
 
-    // list of fd sources
-    pollfd l_read_poll[ 2 ];
+	// server IP
+	getpeername(l_sock_server, (sockaddr *)&l_cl_addr, &l_lsa);
+	log_msg(LOG_INFO, "Server IP: '%s'  port: %d", inet_ntoa(l_cl_addr.sin_addr), ntohs(l_cl_addr.sin_port));
 
-    l_read_poll[ 0 ].fd = STDIN_FILENO;
-    l_read_poll[ 0 ].events = POLLIN;
-    l_read_poll[ 1 ].fd = l_sock_server;
-    l_read_poll[ 1 ].events = POLLIN;
+	log_msg(LOG_INFO, "Enter 'close' to close application.");
 
-    // go!
-    while ( 1 )
-    {
-        char l_buf[ 128 ];
+	srand(time(NULL));
 
-        // select from fds
-        if ( poll( l_read_poll, 2, -1 ) < 0 ) break;
+#define MAX_MSG_LEN 256
+#define MAX_WORDS_PER_LINE 10
 
-        // data on stdin?
-        if ( l_read_poll[ 0 ].revents & POLLIN )
-        {
-            //  read from stdin
-            int l_len = read( STDIN_FILENO, l_buf, sizeof( l_buf ) );
-            if ( l_len < 0 )
-                log_msg( LOG_ERROR, "Unable to read from stdin." );
-            else
-                log_msg( LOG_DEBUG, "Read %d bytes from stdin.", l_len );
+	const char *words[] = {"hello", "there", "look", "at", "me", ",", "haha", "bruh", "VSB", "semaphore", "is", "there", "something"};
+	size_t num_words = sizeof(words) / sizeof(words[0]);
 
-            // send data to server
-            l_len = write( l_sock_server, l_buf, l_len );
-            if ( l_len < 0 )
-                log_msg( LOG_ERROR, "Unable to send data to server." );
-            else
-                log_msg( LOG_DEBUG, "Sent %d bytes to server.", l_len );
-        }
+	char msg[MAX_MSG_LEN];
+	int numbers[MAX_WORDS_PER_LINE];
 
-        // data from server?
-        if ( l_read_poll[ 1 ].revents & POLLIN )
-        {
-            // read data from server
-            int l_len = read( l_sock_server, l_buf, sizeof( l_buf ) );
-            if ( !l_len )
-            {
-                log_msg( LOG_DEBUG, "Server closed socket." );
-                break;
-            }
-            else if ( l_len < 0 )
-            {
-                log_msg( LOG_ERROR, "Unable to read data from server." );
-                break;
-            }
-            else
-                log_msg( LOG_DEBUG, "Read %d bytes from server.", l_len );
+	while (1)
+	{
+		int num_words_in_line = rand() % MAX_WORDS_PER_LINE + 1;
 
-            // display on stdout
-            l_len = write( STDOUT_FILENO, l_buf, l_len );
-            if ( l_len < 0 )
-                log_msg( LOG_ERROR, "Unable to write to stdout." );
+		for (int i = 0; i < num_words_in_line; i++)
+		{
+			numbers[i] = rand() % num_words;
+		}
 
-            // request to close?
-            if ( !strncasecmp( l_buf, STR_CLOSE, strlen( STR_CLOSE ) ) )
-            {
-                log_msg( LOG_INFO, "Connection will be closed..." );
-                break;
-            }
-        }
-    }
+		int msg_len = 0;
+		msg[0] = '\0'; // Start with an empty string
 
-    // close socket
-    close( l_sock_server );
+		for (int i = 0; i < num_words_in_line; i++)
+		{
+			// Ensure we don't overflow the buffer
+			int remaining_space = MAX_MSG_LEN - msg_len;
+			if (remaining_space <= 0)
+			{
+				fprintf(stderr, "Message is too long.\n");
+				break;
+			}
 
-    return 0;
-  }
+			// Add a word to the message
+			
+			int word_len = snprintf(msg + msg_len, remaining_space, "%s ", words[numbers[i]]);
+			if (word_len < 0 || word_len >= remaining_space)
+			{
+				fprintf(stderr, "Error adding word to message.\n");
+				break;
+			}
+
+			msg_len += word_len;
+		}
+
+		// Remove trailing space and add a period
+		if (msg_len > 0)
+		{
+			msg[msg_len - 1] = '.'; // Replace last space with a period
+			msg[msg_len] = '\0';		// Null-terminate the string
+		}
+		log_msg(LOG_INFO, "sending: %s", msg);
+		ssize_t bytes_sent = write(l_sock_server, msg, msg_len);
+
+		if (bytes_sent < 0)
+		{
+			perror("Error sending message");
+			break; 
+		}
+
+
+
+		size_t bytes_read = read(l_sock_server, msg, sizeof(msg));
+		msg[bytes_read] = '\0';
+		log_msg(LOG_INFO, "received: %s", msg);
+
+
+	}
+
+	close(l_sock_server);
+
+	return 0;
+}
