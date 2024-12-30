@@ -2,9 +2,9 @@
 <a href="https://poli.cs.vsb.cz/edu/osy" target="_blank">https://poli.cs.vsb.cz/edu/osy</a>
 
 
-✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani05`, `zadani06`, `zadani09`, `zadani10`, `zadani11`
+✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani05`, `zadani06`, `zadani08`, `zadani09`, `zadani10`, `zadani11`
 
-❌ **Todo:** `zadani04`, `zadani07`, `zadani08`
+❌ **Todo:** `zadani04`, `zadani07`
 
 
 ## Snippets
@@ -16,9 +16,9 @@
 - [Threads in C/C++](snippets/thread.md)
 - [Semaphores in C/C++](snippets/semaphore.md)
 - [Exec in C/C++](snippets/exec.md)
-
+- [String operations in C/C++](snippets/string_operations.md)
 ---
 ### todo: 
 ```
-string operation, makefile, shared memory, http, stat, grep, msg_queue, dup2
+makefile, shared memory, http, stat, grep, msg_queue, dup2
 ```
