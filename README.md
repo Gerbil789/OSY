@@ -2,9 +2,9 @@
 <a href="https://poli.cs.vsb.cz/edu/osy" target="_blank">https://poli.cs.vsb.cz/edu/osy</a>
 
 
-✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani05`, `zadani06`, `zadani08`, `zadani09`, `zadani10`, `zadani11`
+✅ **Done:** `zadani01`, `zadani02`, `zadani03`, `zadani04`, `zadani05`, `zadani06`, `zadani08`, `zadani09`, `zadani10`, `zadani11`
 
-❌ **Todo:** `zadani04`, `zadani07`
+❌ **Todo:** `zadani07`
 
 
 ## Snippets
