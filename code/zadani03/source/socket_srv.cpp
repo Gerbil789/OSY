@@ -16,14 +16,9 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define STR_CLOSE "close"
-#define STR_QUIT "quit"
-
 #define LOG_ERROR 0 // errors
 #define LOG_INFO 1	// information and notifications
 #define LOG_DEBUG 2 // debug messages
-
-sem_t client_sem;
 
 int g_debug = LOG_INFO;
 
@@ -78,6 +73,8 @@ void help(int t_narg, char **t_args)
 		g_debug = LOG_DEBUG;
 }
 
+sem_t client_sem;
+
 void *client_handler(void *arg)
 {
 	int client_socket = *(int *)arg;
@@ -90,7 +87,7 @@ void *client_handler(void *arg)
 		pthread_exit(NULL);
 	}
 
-	// Get LENGTH
+	// get LENGTH
 	long length;
 	if (sscanf(buffer, "%ld\n", &length) < 0)
 	{
@@ -103,7 +100,7 @@ void *client_handler(void *arg)
 
 	// sleep(5); // test multiple clients and semaphore
 
-	// Respond with OK
+	// respond with OK
 	char response[] = "OK\n";
 	size_t bytes_send = write(client_socket, response, strlen(response));
 	if (bytes_send < strlen(response))
@@ -122,7 +119,7 @@ void *client_handler(void *arg)
 		pthread_exit(NULL);
 	}
 
-	// Read input file
+	// read the file
 	size_t total_bytes_read = 0;
 	while (total_bytes_read < (size_t)length)
 	{
@@ -130,8 +127,8 @@ void *client_handler(void *arg)
 		if (bytes_read <= 0)
 		{
 			log_msg(LOG_ERROR, "Failed to read data from client.");
-			free(dynamic_buffer);	 // Free the buffer before exiting
-			sem_post(&client_sem); // Unlock semaphore before exiting
+			free(dynamic_buffer);	 // free the buffer before exiting
+			sem_post(&client_sem); // unlock semaphore before exiting
 			pthread_exit(NULL);
 		}
 		total_bytes_read += bytes_read;
@@ -141,40 +138,39 @@ void *client_handler(void *arg)
 	// PROCESS DATA
 	char *line_start = dynamic_buffer;
 	int line_number = 1;
-	char processed_data[1024]; // Buffer to hold processed data
+	char processed_data[1024]; // buffer to hold processed data
 	size_t processed_data_length = 0;
 
 	while (line_start < dynamic_buffer + total_bytes_read)
 	{
-		// Find the end of the current line
+		// find the end of the current line
 		char *line_end = strchr(line_start, '\n');
 		if (line_end == NULL)
 			line_end = dynamic_buffer + total_bytes_read; // No newline, end of buffer
 
-		// Format the line with the line number
+		// format the line with the line number
 		int len = snprintf(processed_data + processed_data_length, sizeof(processed_data) - processed_data_length, "%d: ", line_number);
 		processed_data_length += len;
 
-		// Copy the line content
+		// copy the line content
 		len = snprintf(processed_data + processed_data_length, sizeof(processed_data) - processed_data_length, "%.*s\n", (int)(line_end - line_start), line_start);
 		processed_data_length += len;
 
-		// Move to the next line
+		// move to the next line
 		line_start = line_end + 1;
 		line_number++;
 	}
 
-	// Send the processed data back to the client
+	// send the processed data back to the client
 	bytes_send = write(client_socket, processed_data, processed_data_length);
 	if (bytes_send < processed_data_length)
 	{
 		log_msg(LOG_ERROR, "Failed to send processed data to client.");
 	}
 
-
-	free(dynamic_buffer);	 	// Free the dynamically allocated buffer
-	sem_post(&client_sem); 	// unlock semaphore
-	close(client_socket);		// close socket
+	free(dynamic_buffer);	 // Free the dynamically allocated buffer
+	sem_post(&client_sem); // unlock semaphore
+	close(client_socket);	 // close socket
 	pthread_exit(NULL);
 }
 

@@ -19,4 +19,4 @@ Práci se seznamem klientů je nutno považovat za kritickou sekci. Proto je pot
 
 ---
 
-Pokud bude první slovo zprávy od klienta LOCK/UNLOCK, tak klient zamkne/odemkne rozesílání zpráv ostatním klientům. Tento zámek však bude automaticky po 5 zprávách zrušen.
+Pokud bude první slovo zprávy od klienta `LOCK`/`UNLOCK`, tak klient zamkne/odemkne rozesílání zpráv ostatním klientům. Tento zámek však bude automaticky po `5` zprávách zrušen.

@@ -24,5 +24,5 @@
 
 ### todo: 
 ```
-http, stat, grep, msg_queue, dup2
+http, stat, grep, msg_queue, dup2, file_operations
 ```

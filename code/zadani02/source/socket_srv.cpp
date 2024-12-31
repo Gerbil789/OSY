@@ -15,8 +15,6 @@
 #include <errno.h>
 #include <semaphore.h>
 
-#define STR_CLOSE "close"
-#define STR_QUIT "quit"
 #define MAX_CLIENTS 10
 
 #define LOG_ERROR 0 // errors
@@ -57,28 +55,26 @@ void log_msg(int t_log_level, const char *t_form, ...)
 typedef struct
 {
 	int socket;
-	char ip[INET_ADDRSTRLEN];
-	int port;
-	int locked; // Flag to check if client has locked message forwarding
+	int locked;
 } Client;
 
-// Global variables
-Client *clients[MAX_CLIENTS]; 
+// *** CRITICAL SECTION ***
 sem_t client_list_sem;
-int client_count = 0;
 
-// Function to send message to all clients except the sender
+int client_count = 0;
+Client *clients[MAX_CLIENTS];
+// ************************
+
 void broadcast_message(const char *message, int sender_socket)
 {
 	// Add sender info to the message
 	char formatted_message[1024];
-	char sender_info[50];					
+	char sender_info[50];
 	snprintf(sender_info, sizeof(sender_info), "[User %d]: ", sender_socket);
 	snprintf(formatted_message, sizeof(formatted_message), "%s%s", sender_info, message);
 
 	sem_wait(&client_list_sem); // Lock client list
 
-	// Send message to all clients except the sender
 	for (int i = 0; i < client_count; i++)
 	{
 		if (clients[i]->socket != sender_socket && !clients[i]->locked)
@@ -86,12 +82,13 @@ void broadcast_message(const char *message, int sender_socket)
 			write(clients[i]->socket, formatted_message, strlen(formatted_message));
 		}
 	}
+
 	sem_post(&client_list_sem); // Unlock client list
 }
 
 void *client_handler(void *arg)
 {
-	int client_socket = *(int *)arg; // Get the socket from the argument
+	int client_socket = *(int *)arg;
 
 	sem_wait(&client_list_sem);
 
@@ -109,8 +106,6 @@ void *client_handler(void *arg)
 	// Add client to the list
 	Client *new_client = (Client *)malloc(sizeof(Client));
 	new_client->socket = client_socket;
-	inet_ntop(AF_INET, &((struct sockaddr_in *)&arg)->sin_addr, new_client->ip, INET_ADDRSTRLEN);
-	new_client->port = ntohs(((struct sockaddr_in *)&arg)->sin_port);
 	new_client->locked = 0;
 	clients[client_count++] = new_client;
 	sem_post(&client_list_sem);
@@ -123,24 +118,24 @@ void *client_handler(void *arg)
 	{
 		buffer[bytes_read] = '\0'; // Null terminate the message
 
-		//If client sends LOCK or UNLOCK
-		if (strncmp(buffer, "LOCK", 4) == 0) 
+		// If client sends LOCK or UNLOCK
+		if (strncmp(buffer, "LOCK", 4) == 0)
 		{
-		    sem_wait(&client_list_sem);
-				new_client->locked = 5;
-		    sem_post(&client_list_sem);
-		} 
-		else if (strncmp(buffer, "UNLOCK", 6) == 0) 
+			sem_wait(&client_list_sem);
+			new_client->locked = 5;
+			sem_post(&client_list_sem);
+		}
+		else if (strncmp(buffer, "UNLOCK", 6) == 0)
 		{
-		    sem_wait(&client_list_sem);
-		    new_client->locked = 0;
-		    sem_post(&client_list_sem);
-		} 
-		else if(new_client->locked != 0) 
+			sem_wait(&client_list_sem);
+			new_client->locked = 0;
+			sem_post(&client_list_sem);
+		}
+		else if (new_client->locked != 0)
 		{
-		  	sem_wait(&client_list_sem);
-		    new_client->locked--;
-		    sem_post(&client_list_sem);
+			sem_wait(&client_list_sem);
+			new_client->locked--;
+			sem_post(&client_list_sem);
 		}
 		else
 		{

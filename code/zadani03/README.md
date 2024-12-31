@@ -45,3 +45,6 @@ build: `$ make`
 run server: `$ ./socket_srv -d 3333`
 
 run client: `$ ./socket_cl -d localhost 3333 input.txt output.txt`
+
+### moje poznámky
+- toto řešení nefunguje pro dlouhe soubory (`input_2.txt`)
