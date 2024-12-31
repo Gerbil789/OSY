@@ -1,0 +1,3 @@
+[submodule "osy-prog-demo"]
+	path = osy-prog-demo
+	url = https://github.com/osy-cs/osy-prog-demo
