@@ -8,6 +8,7 @@
 
 
 ## Snippets
+- [Makefile](snippets/makefile.md)
 - [fork() in C/C++](snippets/fork.md)
 - [Pipes in C/C++](snippets/pipe.md)
 - [Polling in C/C++](snippets/poll.md)
@@ -15,10 +16,13 @@
 - [Signals in C/C++](snippets/signal.md)
 - [Threads in C/C++](snippets/thread.md)
 - [Semaphores in C/C++](snippets/semaphore.md)
+- [Shared memory in C/C++](snippets/shared_memory.md)
 - [Exec in C/C++](snippets/exec.md)
 - [String operations in C/C++](snippets/string_operations.md)
+
 ---
+
 ### todo: 
 ```
-makefile, shared memory, http, stat, grep, msg_queue, dup2
+http, stat, grep, msg_queue, dup2
 ```
