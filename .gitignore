@@ -5,4 +5,4 @@
 *.o
 
 # Ignore test files
-Code/test/
+code/test/
