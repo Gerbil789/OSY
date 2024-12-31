@@ -1,4 +1,4 @@
-### Pipes in C/C++
+# Pipes in C/C++
 
 A **pipe** is a unidirectional communication mechanism between processes. It allows one process to write data, while another reads it, typically used between parent and child processes.
 

@@ -8,21 +8,19 @@
 
 
 ## Snippets
+- [fork()](snippets/fork.md)
+- [Pipes](snippets/pipe.md)
+- [dup2()](snippets/dup2.md)
+- [exec()](snippets/exec.md)
+- [grep](snippets/grep.md)
+- [stat()](snippets/stat.md)
+- [Polling](snippets/poll.md)
+- [Sockets](snippets/socket.md)
+- [Signals](snippets/signal.md)
+- [Threads](snippets/thread.md)
+- [Semaphores](snippets/semaphore.md)
+- [Shared memory](snippets/shared_memory.md)
+- [Message_queue](snippets/msg_queue.md)
+- [String operations](snippets/string_operations.md)
+- [File operations](snippets/file_operations.md)
 - [Makefile](snippets/makefile.md)
-- [fork() in C/C++](snippets/fork.md)
-- [Pipes in C/C++](snippets/pipe.md)
-- [Polling in C/C++](snippets/poll.md)
-- [Sockets in C/C++](snippets/socket.md)
-- [Signals in C/C++](snippets/signal.md)
-- [Threads in C/C++](snippets/thread.md)
-- [Semaphores in C/C++](snippets/semaphore.md)
-- [Shared memory in C/C++](snippets/shared_memory.md)
-- [Exec in C/C++](snippets/exec.md)
-- [String operations in C/C++](snippets/string_operations.md)
-
----
-
-### todo: 
-```
-http, stat, grep, msg_queue, dup2, file_operations
-```

@@ -1,4 +1,4 @@
-### Semaphores in C/C++
+# Semaphores in C/C++
 
 A **semaphore** is a synchronization primitive used to control access to a shared resource in concurrent programming. It is often used to avoid race conditions or ensure mutual exclusion.
 

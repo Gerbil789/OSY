@@ -1,4 +1,4 @@
-### Sockets in C/C++
+# Sockets in C/C++
 
 A **socket** is an endpoint for communication between processes over a network. It can be used for both connection-oriented (TCP) and connectionless (UDP) communication.
 

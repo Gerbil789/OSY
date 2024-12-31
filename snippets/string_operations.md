@@ -82,7 +82,7 @@ strncat(dest, " How are you?", 4);  // dest: "Hello, worl How"
 ```c
 char *a = "Programming";
 char *ptr = strchr(a, 'g');
-printf("%s\n", ptr);  // gramming
+printf("%s\n", ptr);  // gramming ("grejming")
 ```
 
 ### **`strstr`** - searches for a substring

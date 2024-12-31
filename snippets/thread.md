@@ -1,4 +1,4 @@
-### Threads in C/C++ (POSIX Threads - `pthread`)
+# Threads in C/C++ (POSIX Threads - `pthread`)
 
 POSIX Threads (`pthread`) provide a standard way to create and manage threads in Unix-like operating systems. Threads allow concurrent execution within a single process, sharing the same memory space.
 

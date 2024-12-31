@@ -1,5 +1,4 @@
-
-### `exec` in C/C++
+# `exec` in C/C++
 
 The `exec` family of functions in Unix-like operating systems replaces the current process image with a new one. It is used to run a different program within the same process.
 

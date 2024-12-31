@@ -1,4 +1,4 @@
-### Signals in C/C++
+# Signals in C/C++
 
 **Signals** are asynchronous notifications sent to a process to notify it of events such as interrupts or exceptions. They are a key mechanism for interprocess communication in Unix-like systems.
 

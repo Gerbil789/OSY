@@ -1,6 +1,4 @@
-
-
-### `fork()` in C/C++
+# `fork()` in C/C++
 
 `fork()` is a system call in Unix-like operating systems that creates a new process by duplicating the calling process. The new process is called the child process, and the original is the parent process.
 

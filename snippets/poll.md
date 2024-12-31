@@ -1,4 +1,4 @@
-### Polling in C/C++
+# Polling in C/C++
 
 **Polling** is a mechanism to monitor multiple file descriptors (e.g., pipes, sockets) for events such as readability, writability, or errors.
 
