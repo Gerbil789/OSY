@@ -1,0 +1,5 @@
+0. ahoj
+3. svete
+6. jak
+9. se mas
+Dokončeno počítání řádků: 4Počet znaků: 21
