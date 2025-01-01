@@ -2,6 +2,9 @@
 - sscanf() / for getting values from string, input
 
 
+# working with file
+fgets(buf, sizeof(char), strlen(buf), f)
+
 # Usefull snippets
 
 ### Formatting string and writing to socket
@@ -73,4 +76,17 @@ char *line_end = strchr(line_start, '\n');
 "<html>\n"
 "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>\n"
 "<body><pre>\n";
+```
+
+
+```c
+
+struct shm_data
+{
+  int num_of_process;
+  int counter;
+};
+
+shm_data *g_glb_data = nullptr;
+
 ```
