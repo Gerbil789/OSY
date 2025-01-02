@@ -90,3 +90,10 @@ struct shm_data
 shm_data *g_glb_data = nullptr;
 
 ```
+
+
+
+
+# Tips & Tricks
+When passing socekt as parameter into a new `thread`, use `semaphores`, so you cant create 2 threads with same sockets. That is **minus** point on the test
+
